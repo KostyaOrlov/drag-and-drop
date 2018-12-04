@@ -1,25 +1,67 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Card from "./Card";
 
 class App extends Component {
+  state = {
+    tasks: [
+      {
+        id: 1,
+        name: "design",
+        status: "done"
+      },
+      {
+        id: 2,
+        name: "layout",
+        status: "wip"
+      },
+      {
+        id: 3,
+        name: "functionality",
+        status: "wip"
+      },
+      {
+        id: 4,
+        name: "sales",
+        status: "indesign"
+      },
+      {
+        id: 5,
+        name: "money",
+        status: "waiting"
+      }
+    ]
+  };
+
+  updateOnDrop = (id, status) => {
+    const tasks = this.state.tasks.map(item => {
+      if (item.id === +id) {
+        item.status = status;
+      }
+      return item;
+    });
+    console.log(tasks);
+    this.setState({
+      tasks: [...tasks]
+    });
+  };
   render() {
+    const { tasks } = this.state;
+    const statuses = tasks.map(item => item.status);
+    const uniqueStatuses = Array.from(new Set(statuses));
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <h3>Trello</h3>
+        <div className="container">
+          {uniqueStatuses.map((status, index) => (
+            <Card
+              key={index}
+              status={status}
+              list={tasks.filter(item => item.status === status)}
+              updateOnDrop={this.updateOnDrop}
+            />
+          ))}
+        </div>
       </div>
     );
   }
